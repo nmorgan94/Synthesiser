@@ -12,11 +12,23 @@
 #include "FilterUI.h"
 
 //==============================================================================
-FilterUI::FilterUI()
+FilterUI::FilterUI(SynthAudioProcessor& p) : processor(p)
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
-
+    
+    buildFilterSlider(lowpassSlider, 20.0f, 20000.0f, 20000.0f, "lCutoff");
+    buildFilterSlider(highpassSlider, 20.0f, 20000.0f, 20.0f, "hCutoff");
+    
+    lowpassAttachment =  std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (processor.state, "lowpassCutoff", lowpassSlider);
+    highpassAttachment =  std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (processor.state, "highpassCutoff", highpassSlider);
+    
+    label.setText("Filter", dontSendNotification);
+    label.setJustificationType (Justification::centred);
+    label.setFont (Font (12.00f, Font::plain));
+    label.setColour (Label::outlineColourId, Colours::grey);
+    
+    addAndMakeVisible(label);
 }
 
 FilterUI::~FilterUI()
@@ -37,15 +49,33 @@ void FilterUI::paint (Graphics& g)
     g.setColour (Colours::grey);
     g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
 
-    g.setColour (Colours::white);
-    g.setFont (14.0f);
-    g.drawText ("FilterUI", getLocalBounds(),
-                Justification::centred, true);   // draw some placeholder text
+    
 }
 
 void FilterUI::resized()
 {
     // This method is where you should set the bounds of any child
     // components that your component contains..
+    
+    auto area = getLocalBounds();
+    auto labelArea = area.removeFromBottom(15);
+    
+    highpassSlider.setBounds(area.removeFromLeft (getWidth() / 2));
+    lowpassSlider.setBounds(area.removeFromLeft (getWidth() / 2));
 
+    
+    label.setBounds(labelArea);
+
+}
+
+void FilterUI::buildFilterSlider(Slider& slider, float minValue, float maxValue, float startingValue, String text){
+    
+    addAndMakeVisible(slider);
+    slider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
+    slider.setRange(minValue, maxValue);
+    slider.setValue (startingValue);
+    slider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+    slider.setPopupDisplayEnabled (true, false, this);
+    slider.setNumDecimalPlacesToDisplay(2);
+    slider.setTextValueSuffix(" "+text);
 }

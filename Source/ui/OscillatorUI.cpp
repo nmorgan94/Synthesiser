@@ -17,9 +17,7 @@ OscillatorUI::OscillatorUI(SynthAudioProcessor& p, String oscillatorParameter, S
 connectedOscillatorParameter(oscillatorParameter),
 connectedMidiOffsetParameter(midiOffsetParameter),
 connectedGainParameter(gainParameter)
-//comboBoxAttachment  (processor.state, connectedOscillatorParameter, comboBox),
-//pitchAttachment     (processor.state, connectedMidiOffsetParameter,  midiOffsetSlider),
-//volumeAttachment    (processor.state, connectedGainParameter,  volumeSlider)
+
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
@@ -28,9 +26,9 @@ connectedGainParameter(gainParameter)
     
     comboBox.setJustificationType(Justification::centred);
     
-    buildOscillatorSlider(midiOffsetSlider, -24, 24, 0);
+    buildOscillatorSlider(midiOffsetSlider, -24, 24, 0, "Offset");
     midiOffsetSlider.setRange(-24, 24, 0);
-    buildOscillatorSlider(volumeSlider, 0.0, 1.0, 1.0);
+    buildOscillatorSlider(volumeSlider, 0.0, 1.0, 1.0, "Gain");
     DBG(connectedOscillatorParameter);
     comboBoxAttachment = std::make_unique<AudioProcessorValueTreeState::ComboBoxAttachment> (processor.state, connectedOscillatorParameter, comboBox);
 
@@ -38,7 +36,15 @@ connectedGainParameter(gainParameter)
     
     volumeAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (processor.state, connectedGainParameter, volumeSlider);
     
+    buildLabel(offsetLabel, "Offset");
+    buildLabel(gainLabel, "Gain");
     
+    label.setText("Oscillator", dontSendNotification);
+    label.setJustificationType (Justification::centred);
+    label.setFont (Font (12.00f, Font::plain));
+    label.setColour (Label::outlineColourId, Colours::grey);
+    
+    addAndMakeVisible (label);
     
 }
 
@@ -72,18 +78,35 @@ void OscillatorUI::resized()
     // components that your component contains..
     
     auto area = getLocalBounds();
+    auto labelArea = area.removeFromBottom(15);
+    
     comboBox.setBounds(area.removeFromLeft(getWidth() /2).reduced(20));
-    //comboBox.setSelectedId(*processor.state.getRawParameterValue(connectedOscillatorParameter));
+
     midiOffsetSlider.setBounds(area.removeFromLeft(getWidth() /4));
+    offsetLabel.setBounds(215, 90, getWidth(), 10);
+    
     volumeSlider.setBounds(area.removeFromLeft(getWidth() /4));
+    gainLabel.setBounds(313, 90, getWidth(), 10);
+    
+    label.setBounds(labelArea);
     
 }
 
-void OscillatorUI::buildOscillatorSlider(Slider& slider, float minValue, float maxValue, float startingValue){
+void OscillatorUI::buildOscillatorSlider(Slider& slider, float minValue, float maxValue, float startingValue, String text){
     
     addAndMakeVisible(slider);
     slider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
     slider.setRange(minValue, maxValue);
     slider.setValue (startingValue);
     slider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+    slider.setPopupDisplayEnabled (true, false, this);
+    slider.setTextValueSuffix(" "+text);
+    
+}
+
+void OscillatorUI::buildLabel(Label& label, String text){
+    label.setText(text, dontSendNotification);
+    label.setFont (Font (10.00f, Font::plain));
+    addAndMakeVisible (label);
+    
 }

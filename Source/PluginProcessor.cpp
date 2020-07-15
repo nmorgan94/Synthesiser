@@ -25,10 +25,17 @@ SynthAudioProcessor::SynthAudioProcessor()
 
 #endif
 {
-    mySynth.clearVoices();
-    mySynth.addVoice(new SynthVoice());
-    mySynth.clearSounds();
-    mySynth.addSound(new SynthSound());
+    synthesiser.clearVoices();
+    
+    
+    for (int i = 0; i < 5; i++)
+    {
+        synthesiser.addVoice(new SynthVoice());
+    }
+    
+    
+    synthesiser.clearSounds();
+    synthesiser.addSound(new SynthSound());
 }
 
 SynthAudioProcessor::~SynthAudioProcessor()
@@ -102,7 +109,7 @@ void SynthAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
-    mySynth.setCurrentPlaybackSampleRate(sampleRate);
+    synthesiser.setCurrentPlaybackSampleRate(sampleRate);
     reverb.setSampleRate(sampleRate);
     oscilloscope.clear();
 }
@@ -139,35 +146,33 @@ bool SynthAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) co
 
 void SynthAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
-    
-    
-    
-    if ((myVoice = dynamic_cast<SynthVoice*>(mySynth.getVoice(0))))
-    {
-        //TODO - value state listener, sampler vid 7
-        myVoice->setEnvelopeParams(*state.getRawParameterValue("attack"),
-                                   *state.getRawParameterValue("decay"),
-                                   *state.getRawParameterValue("sustain"),
-                                   *state.getRawParameterValue("release"));
-        
-        setOscillators();
-        
-        
-    }
-    
+    setSynthesiserVoice();
     
     buffer.clear();
     
+    synthesiser.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
+    
+    setFilterParameters();
     setReverbParameters();
     
-    reverb.setParameters (reverbParameters);
+    if (getMainBusNumOutputChannels() == 1){
+        lowpassIIRFilterLeft.processSamples(buffer.getWritePointer(0), buffer.getNumSamples());
+        
+        highpassIIRFilterLeft.processSamples(buffer.getWritePointer(0), buffer.getNumSamples());
+        
+        reverb.processMono (buffer.getWritePointer (0), buffer.getNumSamples());
+    }
+    else if (getMainBusNumOutputChannels() == 2){
+        lowpassIIRFilterLeft.processSamples(buffer.getWritePointer(0), buffer.getNumSamples());
+        lowpassIIRFilterRight.processSamples(buffer.getWritePointer(1), buffer.getNumSamples());
+        
+        highpassIIRFilterLeft.processSamples(buffer.getWritePointer(0), buffer.getNumSamples());
+        highpassIIRFilterRight.processSamples(buffer.getWritePointer(1), buffer.getNumSamples());
+        
+        reverb.processStereo (buffer.getWritePointer (0), buffer.getWritePointer (1), buffer.getNumSamples());
+    }
     
-    
-    mySynth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
-    
-    reverb.processStereo(buffer.getWritePointer(0), buffer.getWritePointer(1), buffer.getNumSamples());
-    
-    buffer.applyGain(*state.getRawParameterValue("masterGain"));
+    buffer.applyGain(*state.getRawParameterValue("masterGain") * 0.3);
     
     oscilloscope.pushBuffer(buffer);
     oscilloscope.checkIfClipping(buffer.getMagnitude(0, buffer.getNumSamples()));
@@ -202,40 +207,59 @@ AudioProcessorValueTreeState::ParameterLayout SynthAudioProcessor::createParamet
 {
     std::vector<std::unique_ptr<RangedAudioParameter>> params;
     
-    params.push_back (std::make_unique<AudioParameterFloat>("attack", "Attack", NormalisableRange<float>(0.1f, 5000.0f), 0.1f));
-    params.push_back (std::make_unique<AudioParameterFloat>("decay", "Decay", NormalisableRange<float>(1.0f, 2000.0f), 1.0f));
-    params.push_back (std::make_unique<AudioParameterFloat>("sustain", "Sustain", NormalisableRange<float>(0.0f, 1.0f), 1.0f));
-    params.push_back (std::make_unique<AudioParameterFloat>("release", "Release", NormalisableRange<float>(0.1f, 5000.0f), 0.1f));
+    params.push_back (std::make_unique<AudioParameterFloat>("attack", "Envelope: Attack", 0.1f, 5000.0f, 0.1f));
+    params.push_back (std::make_unique<AudioParameterFloat>("decay", "Envelope: Decay", 1.0f, 2000.0f, 1.0f));
+    params.push_back (std::make_unique<AudioParameterFloat>("sustain", "Envelope: Sustain", 0.0f, 1.0f, 1.0f));
+    params.push_back (std::make_unique<AudioParameterFloat>("release", "Envelope: Release", 0.1f, 5000.0f, 0.1f));
     
     params.push_back (std::make_unique<AudioParameterInt>("osc1", "Osc1", 1, 7, 1));
     params.push_back (std::make_unique<AudioParameterInt>("midiOffset1", "MidiOffset1", -24, 24, 0));
-    params.push_back (std::make_unique<AudioParameterFloat>("oscillator1Gain", "Oscillator1Gain", NormalisableRange<float>(0.0f, 1.0f),1.0f));
+    params.push_back (std::make_unique<AudioParameterFloat>("oscillator1Gain", "Oscillator1Gain", 0.0f, 1.0f,1.0f));
     
     params.push_back (std::make_unique<AudioParameterInt>("osc2", "Osc2", 1, 7, 1));
     params.push_back (std::make_unique<AudioParameterInt>("midiOffset2", "MidiOffset2", -24, 24, 0));
-    params.push_back (std::make_unique<AudioParameterFloat>("oscillator2Gain", "Oscillator2Gain", NormalisableRange<float>(0.0f, 1.0f),1.0f));
+    params.push_back (std::make_unique<AudioParameterFloat>("oscillator2Gain", "Oscillator2Gain", 0.0f, 1.0f,1.0f));
     
     params.push_back (std::make_unique<AudioParameterInt>("osc3", "Osc3", 1, 3, 1));
     params.push_back (std::make_unique<AudioParameterInt>("midiOffset3", "MidiOffset3", -24, 24, 0));
-    params.push_back (std::make_unique<AudioParameterFloat>("oscillator3Gain", "Oscillator3Gain", NormalisableRange<float>(0.0f, 1.0f),1.0f));
+    params.push_back (std::make_unique<AudioParameterFloat>("oscillator3Gain", "Oscillator3Gain", 0.0f, 1.0f,1.0f));
     
-    params.push_back (std::make_unique<AudioParameterFloat>("masterGain", "MasterGain", NormalisableRange<float>(0.0f, 1.0f), 0.5f));
+    params.push_back (std::make_unique<AudioParameterFloat>("masterGain", "MasterGain", 0.0f, 1.0f, 0.5f));
     
     params.push_back (std::make_unique<AudioParameterFloat>("roomSize", "RoomSize", 0.1f, 1.0f, 0.1f));
     params.push_back (std::make_unique<AudioParameterFloat>("damping", "Damping", 0.1f, 1.0f, 0.1f));
     params.push_back (std::make_unique<AudioParameterFloat>("width", "Width", 0.1f, 1.0f, 0.1f));
     params.push_back (std::make_unique<AudioParameterFloat>("wetLevel", "WetLevel", 0.1f, 1.0f, 0.1f));
     
+    params.push_back (std::make_unique<AudioParameterFloat>("lowpassCutoff", "LowpassCutoff", 20.0f, 20000.0f, 20000.0f));
+    params.push_back (std::make_unique<AudioParameterFloat>("highpassCutoff", "HighpassCutoff", 20.0f, 20000.0f, 20.0f));
+    
     return { params.begin(), params.end() };
 }
 
 
 
-void SynthAudioProcessor::setOscillators(){
+void SynthAudioProcessor::setSynthesiserVoice(){
     
-    myVoice->setOscillator(0, *state.getRawParameterValue("osc1"), *state.getRawParameterValue("oscillator1Gain"), *state.getRawParameterValue("midiOffset1"));
-    
-    myVoice->setOscillator(1, *state.getRawParameterValue("osc2"), *state.getRawParameterValue("oscillator2Gain"), *state.getRawParameterValue("midiOffset2"));
+    for(int i = 0; i < synthesiser.getNumVoices(); i++){
+        auto* synthVoice = dynamic_cast<SynthVoice*>(synthesiser.getVoice(i));
+        {
+            //TODO - value state listener, sampler vid 7
+            synthVoice->setEnvelopeParams(*state.getRawParameterValue("attack"),
+                                          *state.getRawParameterValue("decay"),
+                                          *state.getRawParameterValue("sustain"),
+                                          *state.getRawParameterValue("release"));
+            
+            
+            synthVoice->setOscillator(0, *state.getRawParameterValue("osc1"), *state.getRawParameterValue("oscillator1Gain"), *state.getRawParameterValue("midiOffset1"));
+            
+            synthVoice->setOscillator(1, *state.getRawParameterValue("osc2"), *state.getRawParameterValue("oscillator2Gain"), *state.getRawParameterValue("midiOffset2"));
+            
+            synthVoice->setOscillator(2, *state.getRawParameterValue("osc3"), *state.getRawParameterValue("oscillator3Gain"), *state.getRawParameterValue("midiOffset3"));
+            
+            
+        }
+    }
 }
 
 void SynthAudioProcessor::setReverbParameters(){
@@ -243,6 +267,17 @@ void SynthAudioProcessor::setReverbParameters(){
     reverbParameters.damping = *state.getRawParameterValue("damping");
     reverbParameters.width = *state.getRawParameterValue("width");
     reverbParameters.wetLevel = *state.getRawParameterValue("wetLevel");
+    reverb.setParameters (reverbParameters);
+}
+
+void SynthAudioProcessor::setFilterParameters(){
+    lowpassIIRCoefficients = IIRCoefficients::makeLowPass(44100, *state.getRawParameterValue("lowpassCutoff"), 3);
+    lowpassIIRFilterLeft.setCoefficients(lowpassIIRCoefficients);
+    lowpassIIRFilterRight.setCoefficients(lowpassIIRCoefficients);
+    
+    highpassIIRCoefficients =  IIRCoefficients::makeHighPass(44100, *state.getRawParameterValue("highpassCutoff"), 3);
+    highpassIIRFilterLeft.setCoefficients(highpassIIRCoefficients);
+    highpassIIRFilterRight.setCoefficients(highpassIIRCoefficients);
 }
 
 

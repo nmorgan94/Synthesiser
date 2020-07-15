@@ -22,6 +22,13 @@ MasterGainUI::MasterGainUI(SynthAudioProcessor& p) : processor(p)
     masterGainSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
     
     masterGainAttachment =  std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (processor.state, "masterGain", masterGainSlider);
+    
+    label.setText("Master Volume", dontSendNotification);
+    label.setJustificationType (Justification::centred);
+    label.setFont (Font (12.00f, Font::plain));
+    label.setColour (Label::outlineColourId, Colours::grey);
+    
+    addAndMakeVisible (label);
 }
 
 MasterGainUI::~MasterGainUI()
@@ -45,8 +52,7 @@ void MasterGainUI::paint (Graphics& g)
 
     g.setColour (Colours::white);
     g.setFont (14.0f);
-//    g.drawText ("FilterUI", getLocalBounds(),
-//                Justification::centred, true);   // draw some placeholder text
+
 
 }
 
@@ -57,7 +63,9 @@ void MasterGainUI::resized()
     
     addAndMakeVisible(masterGainSlider);
     auto area = getLocalBounds();
+    auto labelArea = area.removeFromBottom(15);
     
     masterGainSlider.setBounds(area);
+    label.setBounds(labelArea);
 
 }

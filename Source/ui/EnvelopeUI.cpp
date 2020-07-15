@@ -13,30 +13,33 @@
 
 //==============================================================================
 EnvelopeUI::EnvelopeUI(SynthAudioProcessor& p) : processor(p)
-//attackAttachment       (processor.state, "attack",  attackSlider),
-//decayAttachment      (processor.state, "decay", decaySlider),
-//sustainAttachment       (processor.state, "sustain",  sustainSlider),
-//releaseAttachment      (processor.state, "release", releaseSlider)
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
    
     
-    buildEnvelopeSlider(attackSlider, 0.1f, 5000.0f, 0.1f);
-    buildEnvelopeSlider(decaySlider, 1.0f, 2000.0f, 1.0f);
-    buildEnvelopeSlider(sustainSlider, 0.0f, 1.0f, 1.0f);
-    buildEnvelopeSlider(releaseSlider, 0.1f, 5000.0f, 0.1f);
+    buildEnvelopeSlider(attackSlider, 0.1f, 5000.0f, 0.1f, "Attack");
+    buildEnvelopeSlider(decaySlider, 1.0f, 2000.0f, 1.0f, "Decay");
+    buildEnvelopeSlider(sustainSlider, 0.0f, 1.0f, 1.0f, "Susttain");
+    buildEnvelopeSlider(releaseSlider, 0.1f, 5000.0f, 0.1f, "Release");
     
     attackAttachment =  std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (processor.state, "attack", attackSlider);
     decayAttachment =  std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (processor.state, "decay", decaySlider);
     sustainAttachment =  std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (processor.state, "sustain", sustainSlider);
     releaseAttachment =  std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (processor.state, "release", releaseSlider);
     
+    buildLabel(attackLabel, "Attack");
+    buildLabel(decayLabel, "Decay");
+    buildLabel(sustainLabel, "Sustain");
+    buildLabel(releaseLabel, "Release");
+    
     label.setText("Envelope", dontSendNotification);
     label.setJustificationType (Justification::centred);
+    label.setFont (Font (12.00f, Font::plain));
+    label.setColour (Label::outlineColourId, Colours::grey);
     
     addAndMakeVisible (label);
-
+    
 }
 
 EnvelopeUI::~EnvelopeUI()
@@ -69,27 +72,37 @@ void EnvelopeUI::resized()
     // components that your component contains..
     
     auto area = getLocalBounds();
+    auto labelArea = area.removeFromBottom(15);
     
     attackSlider.setBounds(area.removeFromLeft (getWidth() / 4));
-    decaySlider.setBounds(area.removeFromLeft (getWidth() / 4));
-    sustainSlider.setBounds(area.removeFromLeft (getWidth() / 4));
-    releaseSlider.setBounds(area.removeFromLeft (getWidth() / 4));
+    attackLabel.setBounds(30, 90, getWidth(), 10);
     
-   // setSliderStateFromParameterValue();
+    decaySlider.setBounds(area.removeFromLeft (getWidth() / 4));
+    decayLabel.setBounds(123, 90, getWidth(), 10);
+    
+    sustainSlider.setBounds(area.removeFromLeft (getWidth() / 4));
+    sustainLabel.setBounds(213, 90, getWidth(), 10);
+    
+    releaseSlider.setBounds(area.removeFromLeft (getWidth() / 4));
+    releaseLabel.setBounds(305, 90, getWidth(), 10);
+    
+    label.setBounds(labelArea);
 }
 
-void EnvelopeUI::buildEnvelopeSlider(Slider& slider, float minValue, float maxValue, float startingValue){
+void EnvelopeUI::buildEnvelopeSlider(Slider& slider, float minValue, float maxValue, float startingValue, String text){
     
     addAndMakeVisible(slider);
     slider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
     slider.setRange(minValue, maxValue);
     slider.setValue (startingValue);
     slider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+   // slider.setPopupDisplayEnabled (true, false, this);
+   // slider.setTextValueSuffix(" "+text);
 }
 
-//void EnvelopeUI::setSliderStateFromParameterValue(){
-//    attackSlider.setValue(*processor.state.getRawParameterValue("attack"));
-//    decaySlider.setValue(*processor.state.getRawParameterValue("decay"));
-//    sustainSlider.setValue(*processor.state.getRawParameterValue("sustain"));
-//    releaseSlider.setValue(*processor.state.getRawParameterValue("release"));
-//}
+void EnvelopeUI::buildLabel(Label& label, String text){
+    label.setText(text, dontSendNotification);
+    label.setFont (Font (10.00f, Font::plain));
+    addAndMakeVisible (label);
+    
+}

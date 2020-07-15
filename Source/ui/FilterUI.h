@@ -11,6 +11,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "../PluginProcessor.h"
 
 //==============================================================================
 /*
@@ -18,12 +19,18 @@
 class FilterUI    : public Component
 {
 public:
-    FilterUI();
+    FilterUI(SynthAudioProcessor&);
     ~FilterUI();
 
     void paint (Graphics&) override;
     void resized() override;
+    void buildFilterSlider(Slider&, float, float, float, String);
 
 private:
+    SynthAudioProcessor& processor;
+    Slider lowpassSlider, highpassSlider;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> lowpassAttachment, highpassAttachment;
+    Label label;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FilterUI)
 };

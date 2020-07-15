@@ -63,19 +63,22 @@ public:
     //==============================================================================
     
     AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
-    void setOscillators();
+    void setSynthesiserVoice();
     void setReverbParameters();
+    void setFilterParameters();
     double getLevel();
     
     AudioProcessorValueTreeState state;
     Oscilloscope oscilloscope;
     
 private:
-    Synthesiser mySynth;
-    SynthVoice* myVoice;//remove this
+    Synthesiser synthesiser;
     
     Reverb reverb;
     Reverb::Parameters reverbParameters;
+    
+    IIRFilter lowpassIIRFilterLeft, lowpassIIRFilterRight, highpassIIRFilterLeft, highpassIIRFilterRight;
+    IIRCoefficients lowpassIIRCoefficients, highpassIIRCoefficients;
     
  
     

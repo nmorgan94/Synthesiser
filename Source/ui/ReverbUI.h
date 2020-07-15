@@ -24,7 +24,8 @@ public:
 
     void paint (Graphics&) override;
     void resized() override;
-    void buildReverbSlider(Slider&, float, float, float);
+    void buildReverbSlider(Slider&, float, float, float, String);
+    void buildLabel(Label& label, String);
 
 private:
   
@@ -34,7 +35,7 @@ private:
     Slider roomSizeSlider, dampingSlider, widthSlider, wetLevelSlider;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> roomSizeAttachment, dampingAttachment, widthAttachment, wetLevelAttachment;
     
-    Label label;
+    Label label, roomSizeLabel, dampingLabel, widthLabel, wetLevelLabel;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ReverbUI)
 };

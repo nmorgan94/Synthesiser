@@ -110,10 +110,10 @@ public:
     double currentSample()
     {
         
-        double sampleArray[2];
+        double sampleArray[3];
         
         
-        for(int i = 0; i < 2; i++){
+        for(int i = 0; i < 3; i++){
             
             switch(oscillatorArray[i].getType())
             {
@@ -144,7 +144,7 @@ public:
         }
       
         
-        return (sampleArray[0] * oscillatorArray[0].getGain() + sampleArray[1] * oscillatorArray[1].getGain());
+        return (sampleArray[0] * oscillatorArray[0].getGain() + sampleArray[1] * oscillatorArray[1].getGain() + sampleArray[2] * oscillatorArray[2].getGain());
     }
     
     
@@ -168,8 +168,8 @@ private:
     
     maxiEnv env1; //try juce adsr
     
-    OscillatorParams oscillatorArray[2];
-    maxiOsc osc[2];
+    OscillatorParams oscillatorArray[3];
+    maxiOsc osc[3];
     
 };
 

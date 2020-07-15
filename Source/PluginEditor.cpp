@@ -13,7 +13,7 @@
 
 //==============================================================================
 SynthAudioProcessorEditor::SynthAudioProcessorEditor (SynthAudioProcessor& p)
-: AudioProcessorEditor (&p), processor (p), envelopeUI (p), oscillatorUI(p, "osc1", "midiOffset1", "oscillator1Gain"), oscillator2UI(p, "osc2", "midiOffset2", "oscillator2Gain"), oscillator3UI(p, "osc3", "midiOffset3", "oscillator3Gain"),reverbUI (p), masterGainUI(p)
+: AudioProcessorEditor (&p), processor (p), envelopeUI (p), oscillatorUI(p, "osc1", "midiOffset1", "oscillator1Gain"), oscillator2UI(p, "osc2", "midiOffset2", "oscillator2Gain"), oscillator3UI(p, "osc3", "midiOffset3", "oscillator3Gain"),reverbUI (p), filterUI(p), masterGainUI(p)
 
 {
     // Make sure that before the constructor has finished, you've set the
@@ -26,6 +26,7 @@ SynthAudioProcessorEditor::SynthAudioProcessorEditor (SynthAudioProcessor& p)
     addAndMakeVisible(&oscillator3UI);
     addAndMakeVisible(&masterGainUI);
     addAndMakeVisible(&reverbUI);
+    addAndMakeVisible(&filterUI);
     addAndMakeVisible(&processor.oscilloscope);
 
     startTimerHz (30);
@@ -65,9 +66,8 @@ void SynthAudioProcessorEditor::resized()
     oscillator3UI.setBounds(leftSide.removeFromTop(getHeight()/4));
     processor.oscilloscope.setBounds(leftSide.removeFromTop(getHeight()/4));
     reverbUI.setBounds(area.removeFromBottom(getHeight()/2));
+    filterUI.setBounds(area.removeFromLeft(area.getWidth()*(3.0f/4.0f)));
     masterGainUI.setBounds(area);
-    
-   
 
     
 }

@@ -24,7 +24,8 @@ public:
 
     void paint (Graphics&) override;
     void resized() override;
-    void buildOscillatorSlider(Slider&, float, float, float);
+    void buildOscillatorSlider(Slider&, float, float, float, String);
+    void buildLabel(Label&, String);
     void setComponentNameText(String name);
 
 private:
@@ -38,10 +39,7 @@ private:
     std::unique_ptr <AudioProcessorValueTreeState::ComboBoxAttachment> comboBoxAttachment;
     std::unique_ptr <AudioProcessorValueTreeState::SliderAttachment> pitchAttachment, volumeAttachment;
     
-    
-//    AudioProcessorValueTreeState::ComboBoxAttachment comboBoxAttachment;
-//    AudioProcessorValueTreeState::SliderAttachment pitchAttachment, volumeAttachment;
-   
+    Label label, offsetLabel, gainLabel;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OscillatorUI)
 };

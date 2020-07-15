@@ -16,6 +16,7 @@
 #include "./ui/OscillatorUI.h"
 #include "./ui/ReverbUI.h"
 #include "./ui/MasterGainUI.h"
+#include "./ui/FilterUI.h"
 
 
 //==============================================================================
@@ -44,6 +45,7 @@ private:
     OscillatorUI oscillator2UI;
     OscillatorUI oscillator3UI;
     ReverbUI reverbUI;
+    FilterUI filterUI;
     MasterGainUI masterGainUI;
     
    
