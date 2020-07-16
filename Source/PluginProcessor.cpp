@@ -195,12 +195,23 @@ void SynthAudioProcessor::getStateInformation (MemoryBlock& destData)
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+    
+    auto savedState = state.copyState();
+    std::unique_ptr<juce::XmlElement> xml (savedState.createXml());
+    copyXmlToBinary (*xml, destData);
 }
 
 void SynthAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+    
+    
+    std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
+    
+    if (xmlState.get() != nullptr)
+        if (xmlState->hasTagName (state.state.getType()))
+            state.replaceState (juce::ValueTree::fromXml (*xmlState));
 }
 
 AudioProcessorValueTreeState::ParameterLayout SynthAudioProcessor::createParameterLayout()
@@ -212,27 +223,27 @@ AudioProcessorValueTreeState::ParameterLayout SynthAudioProcessor::createParamet
     params.push_back (std::make_unique<AudioParameterFloat>("sustain", "Envelope: Sustain", 0.0f, 1.0f, 1.0f));
     params.push_back (std::make_unique<AudioParameterFloat>("release", "Envelope: Release", 0.1f, 5000.0f, 0.1f));
     
-    params.push_back (std::make_unique<AudioParameterInt>("osc1", "Osc1", 1, 7, 1));
-    params.push_back (std::make_unique<AudioParameterInt>("midiOffset1", "MidiOffset1", -24, 24, 0));
-    params.push_back (std::make_unique<AudioParameterFloat>("oscillator1Gain", "Oscillator1Gain", 0.0f, 1.0f,1.0f));
+    params.push_back (std::make_unique<AudioParameterInt>("osc1", "Oscillator 1: Waveshape", 1, 7, 1));
+    params.push_back (std::make_unique<AudioParameterInt>("midiOffset1", "Oscillator 1: Midi Offset", -24, 24, 0));
+    params.push_back (std::make_unique<AudioParameterFloat>("oscillator1Gain", "Oscillator 1: Gain", 0.0f, 1.0f,1.0f));
     
-    params.push_back (std::make_unique<AudioParameterInt>("osc2", "Osc2", 1, 7, 1));
-    params.push_back (std::make_unique<AudioParameterInt>("midiOffset2", "MidiOffset2", -24, 24, 0));
-    params.push_back (std::make_unique<AudioParameterFloat>("oscillator2Gain", "Oscillator2Gain", 0.0f, 1.0f,1.0f));
+    params.push_back (std::make_unique<AudioParameterInt>("osc2", "Oscillator 2: Waveshape", 1, 7, 1));
+    params.push_back (std::make_unique<AudioParameterInt>("midiOffset2", "Oscillator 2: Midi Offset", -24, 24, 0));
+    params.push_back (std::make_unique<AudioParameterFloat>("oscillator2Gain", "Oscillator 2: Gain", 0.0f, 1.0f,0.0f));
     
-    params.push_back (std::make_unique<AudioParameterInt>("osc3", "Osc3", 1, 3, 1));
-    params.push_back (std::make_unique<AudioParameterInt>("midiOffset3", "MidiOffset3", -24, 24, 0));
-    params.push_back (std::make_unique<AudioParameterFloat>("oscillator3Gain", "Oscillator3Gain", 0.0f, 1.0f,1.0f));
+    params.push_back (std::make_unique<AudioParameterInt>("osc3", "Oscillator 3: Waveshape", 1, 7, 1));
+    params.push_back (std::make_unique<AudioParameterInt>("midiOffset3", "Oscillator 3: Midi Offset", -24, 24, 0));
+    params.push_back (std::make_unique<AudioParameterFloat>("oscillator3Gain", "Oscillator 3: Gain", 0.0f, 1.0f,0.0f));
     
-    params.push_back (std::make_unique<AudioParameterFloat>("masterGain", "MasterGain", 0.0f, 1.0f, 0.5f));
+    params.push_back (std::make_unique<AudioParameterFloat>("masterGain", "Master Gain", 0.0f, 1.0f, 0.5f));
     
-    params.push_back (std::make_unique<AudioParameterFloat>("roomSize", "RoomSize", 0.1f, 1.0f, 0.1f));
-    params.push_back (std::make_unique<AudioParameterFloat>("damping", "Damping", 0.1f, 1.0f, 0.1f));
-    params.push_back (std::make_unique<AudioParameterFloat>("width", "Width", 0.1f, 1.0f, 0.1f));
-    params.push_back (std::make_unique<AudioParameterFloat>("wetLevel", "WetLevel", 0.1f, 1.0f, 0.1f));
+    params.push_back (std::make_unique<AudioParameterFloat>("roomSize", "Reverb: Room Size", 0.1f, 1.0f, 0.1f));
+    params.push_back (std::make_unique<AudioParameterFloat>("damping", "Reverb: Damping", 0.1f, 1.0f, 0.1f));
+    params.push_back (std::make_unique<AudioParameterFloat>("width", "Reverb: Width", 0.1f, 1.0f, 0.1f));
+    params.push_back (std::make_unique<AudioParameterFloat>("wetLevel", "Reverb: Wet Level", 0.0f, 1.0f, 0.0f));
     
-    params.push_back (std::make_unique<AudioParameterFloat>("lowpassCutoff", "LowpassCutoff", 20.0f, 20000.0f, 20000.0f));
-    params.push_back (std::make_unique<AudioParameterFloat>("highpassCutoff", "HighpassCutoff", 20.0f, 20000.0f, 20.0f));
+    params.push_back (std::make_unique<AudioParameterFloat>("lowpassCutoff", "Filter: Lowpass Cutoff", 20.0f, 20000.0f, 20000.0f));
+    params.push_back (std::make_unique<AudioParameterFloat>("highpassCutoff", "Filter: Highpass Cutoff", 20.0f, 20000.0f, 20.0f));
     
     return { params.begin(), params.end() };
 }
