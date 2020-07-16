@@ -17,8 +17,6 @@ MasterGainUI::MasterGainUI(SynthAudioProcessor& p) : processor(p)
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
     masterGainSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
-    masterGainSlider.setRange(0, 1);
-    masterGainSlider.setValue (0.5);
     masterGainSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
     
     masterGainAttachment =  std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (processor.state, "masterGain", masterGainSlider);

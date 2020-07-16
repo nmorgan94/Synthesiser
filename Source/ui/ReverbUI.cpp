@@ -97,8 +97,6 @@ void ReverbUI::buildReverbSlider(Slider& slider, float minValue, float maxValue,
     
     addAndMakeVisible(slider);
     slider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
-    slider.setRange(minValue, maxValue);
-    slider.setValue (startingValue);
     slider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
     slider.setPopupDisplayEnabled (true, false, this);
     slider.setTextValueSuffix(" "+text);
