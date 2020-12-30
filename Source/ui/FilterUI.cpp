@@ -17,11 +17,14 @@ FilterUI::FilterUI(SynthAudioProcessor& p) : processor(p)
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
     
-    buildFilterSlider(lowpassSlider, 20.0f, 20000.0f, 20000.0f, "lCutoff");
-    buildFilterSlider(highpassSlider, 20.0f, 20000.0f, 20.0f, "hCutoff");
+    buildFilterSlider(lowpassSlider, 20.0f, 20000.0f, 20000.0f, "Cutoff");
+    buildFilterSlider(highpassSlider, 20.0f, 20000.0f, 20.0f, "Cutoff");
     
     lowpassAttachment =  std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (processor.state, "lowpassCutoff", lowpassSlider);
     highpassAttachment =  std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (processor.state, "highpassCutoff", highpassSlider);
+    
+    buildLabel(highpassLabel, "High-pass");
+    buildLabel(lowpassLabel, "Low-pass");
     
     label.setText("Filter", dontSendNotification);
     label.setJustificationType (Justification::centred);
@@ -62,7 +65,9 @@ void FilterUI::resized()
     
     highpassSlider.setBounds(area.removeFromLeft (getWidth() / 2));
     lowpassSlider.setBounds(area.removeFromLeft (getWidth() / 2));
-
+    
+    highpassLabel.setBounds(43, 96, getWidth(), 10);
+    lowpassLabel.setBounds(186, 96, getWidth(), 10);
     
     label.setBounds(labelArea);
 
@@ -76,4 +81,11 @@ void FilterUI::buildFilterSlider(Slider& slider, float minValue, float maxValue,
     slider.setPopupDisplayEnabled (true, false, this);
     slider.setNumDecimalPlacesToDisplay(2);
     slider.setTextValueSuffix(" "+text);
+}
+
+void FilterUI::buildLabel(Label& label, String text){
+    label.setText(text, dontSendNotification);
+    label.setFont (Font (10.00f, Font::plain));
+    addAndMakeVisible (label);
+    
 }

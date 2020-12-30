@@ -25,12 +25,13 @@ public:
     void paint (Graphics&) override;
     void resized() override;
     void buildFilterSlider(Slider&, float, float, float, String);
+    void buildLabel(Label& label, String text);
 
 private:
     SynthAudioProcessor& processor;
     Slider lowpassSlider, highpassSlider;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> lowpassAttachment, highpassAttachment;
-    Label label;
+    Label label, lowpassLabel, highpassLabel;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FilterUI)
 };

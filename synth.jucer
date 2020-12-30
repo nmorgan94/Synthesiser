@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="jwwq5G" name="synth" projectType="audioplug" jucerVersion="5.4.7"
-              pluginCharacteristicsValue="pluginIsSynth,pluginProducesMidiOut,pluginWantsMidiIn"
-              companyName="Nick Morgan" pluginFormats="buildAU" displaySplashScreen="1">
+<JUCERPROJECT id="jwwq5G" name="synth" projectType="audioplug" pluginCharacteristicsValue="pluginIsSynth,pluginProducesMidiOut,pluginWantsMidiIn"
+              companyName="Nick Morgan" pluginFormats="buildAU,buildVST3" displaySplashScreen="1"
+              jucerFormatVersion="1">
   <MAINGROUP id="eHslX2" name="synth">
     <GROUP id="{1D724622-969C-75E0-366C-1D37028F94E7}" name="Source">
       <GROUP id="{21DE7C0D-0104-FA83-1B02-78EBB850943F}" name="ui">
