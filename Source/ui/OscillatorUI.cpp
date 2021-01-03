@@ -29,7 +29,6 @@ connectedGainParameter(gainParameter)
     buildOscillatorSlider(midiOffsetSlider, -24, 24, 0, "Offset");
     midiOffsetSlider.setRange(-24, 24, 0);
     buildOscillatorSlider(volumeSlider, 0.0, 1.0, 1.0, "Gain");
-    DBG(connectedOscillatorParameter);
     comboBoxAttachment = std::make_unique<AudioProcessorValueTreeState::ComboBoxAttachment> (processor.state, connectedOscillatorParameter, comboBox);
 
     pitchAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (processor.state, connectedMidiOffsetParameter, midiOffsetSlider);

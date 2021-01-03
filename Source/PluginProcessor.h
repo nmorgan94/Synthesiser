@@ -19,7 +19,8 @@
 //==============================================================================
 /**
  */
-class SynthAudioProcessor  : public AudioProcessor
+class SynthAudioProcessor  : public AudioProcessor,
+                             public ValueTree::Listener
 {
 public:
     //==============================================================================
@@ -64,6 +65,7 @@ public:
     //==============================================================================
     
     AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+    void setParameters();
     void setSynthesiserVoice();
     void setReverbParameters();
     void setFilterParameters();
@@ -83,7 +85,9 @@ private:
     
     double lastSampleRate;
     
- 
+    void valueTreePropertyChanged (ValueTree &treeWhosePropertyHasChanged, const Identifier &property) override;
+    
+    std::atomic<bool> shouldUpdate { true };
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SynthAudioProcessor)
