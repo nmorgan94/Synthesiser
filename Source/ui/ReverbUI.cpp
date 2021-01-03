@@ -18,10 +18,10 @@ ReverbUI::ReverbUI(SynthAudioProcessor& p) : processor(p)
     // initialise any special settings that your component needs.
     
     
-    buildReverbSlider(roomSizeSlider, 0.1f, 1.0f, 0.1f, "Room Size");
-    buildReverbSlider(dampingSlider, 0.1f, 1.0f, 0.1f, "Damping");
-    buildReverbSlider(widthSlider, 0.0f, 1.0f, 0.1f, "Width");
-    buildReverbSlider(wetLevelSlider, 0.1f, 1.0f, 0.1f, "Wet Level");
+    buildReverbSlider(roomSizeSlider, "Room Size");
+    buildReverbSlider(dampingSlider, "Damping");
+    buildReverbSlider(widthSlider, "Width");
+    buildReverbSlider(wetLevelSlider, "Wet Level");
     
     roomSizeAttachment =  std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (processor.state, "roomSize", roomSizeSlider);
     dampingAttachment =  std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (processor.state, "damping", dampingSlider);
@@ -93,7 +93,7 @@ void ReverbUI::resized()
     
 }
 
-void ReverbUI::buildReverbSlider(Slider& slider, float minValue, float maxValue, float startingValue, String text){
+void ReverbUI::buildReverbSlider(Slider& slider, String text){
     
     addAndMakeVisible(slider);
     slider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);

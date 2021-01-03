@@ -19,10 +19,10 @@ EnvelopeUI::EnvelopeUI(SynthAudioProcessor& p) : processor(p)
     // initialise any special settings that your component needs.
    
     
-    buildEnvelopeSlider(attackSlider, EnvelopeParams::ATTACK_MIN, EnvelopeParams::ATTACK_MAX, EnvelopeParams::ATTACK_VALUE, "Attack");
-    buildEnvelopeSlider(decaySlider, EnvelopeParams::DECAY_MIN, EnvelopeParams::ATTACK_MAX, EnvelopeParams::ATTACK_VALUE, "Decay");
-    buildEnvelopeSlider(sustainSlider, EnvelopeParams::SUSTAIN_MIN, EnvelopeParams::SUSTAIN_MAX, EnvelopeParams::SUSTAIN_VALUE, "Sustain");
-    buildEnvelopeSlider(releaseSlider, EnvelopeParams::RELEASE_MIN, EnvelopeParams::RELEASE_MAX, EnvelopeParams::RELEASE_VALUE, "Release");
+    buildEnvelopeSlider(attackSlider, "Attack");
+    buildEnvelopeSlider(decaySlider, "Decay");
+    buildEnvelopeSlider(sustainSlider, "Sustain");
+    buildEnvelopeSlider(releaseSlider, "Release");
     
     attackAttachment =  std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (processor.state, "attack", attackSlider);
     decayAttachment =  std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (processor.state, "decay", decaySlider);
@@ -90,13 +90,11 @@ void EnvelopeUI::resized()
     label.setBounds(labelArea);
 }
 
-void EnvelopeUI::buildEnvelopeSlider(Slider& slider, float minValue, float maxValue, float startingValue, String text){
+void EnvelopeUI::buildEnvelopeSlider(Slider& slider, String text){
     
     addAndMakeVisible(slider);
     slider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
     slider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
-   // slider.setPopupDisplayEnabled (true, false, this);
-   // slider.setTextValueSuffix(" "+text);
 }
 
 void EnvelopeUI::buildLabel(Label& label, String text){

@@ -17,8 +17,8 @@ FilterUI::FilterUI(SynthAudioProcessor& p) : processor(p)
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
     
-    buildFilterSlider(lowpassSlider, 20.0f, 20000.0f, 20000.0f, "Cutoff");
-    buildFilterSlider(highpassSlider, 20.0f, 20000.0f, 20.0f, "Cutoff");
+    buildFilterSlider(lowpassSlider, "Cutoff");
+    buildFilterSlider(highpassSlider, "Cutoff");
     
     lowpassAttachment =  std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (processor.state, "lowpassCutoff", lowpassSlider);
     highpassAttachment =  std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (processor.state, "highpassCutoff", highpassSlider);
@@ -73,7 +73,7 @@ void FilterUI::resized()
 
 }
 
-void FilterUI::buildFilterSlider(Slider& slider, float minValue, float maxValue, float startingValue, String text){
+void FilterUI::buildFilterSlider(Slider& slider, String text){
     
     addAndMakeVisible(slider);
     slider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);

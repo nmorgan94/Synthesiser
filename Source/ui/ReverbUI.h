@@ -24,7 +24,7 @@ public:
 
     void paint (Graphics&) override;
     void resized() override;
-    void buildReverbSlider(Slider&, float, float, float, String);
+    void buildReverbSlider(Slider&, String);
     void buildLabel(Label& label, String);
 
 private:

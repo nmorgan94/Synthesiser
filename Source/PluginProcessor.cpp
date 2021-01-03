@@ -224,27 +224,27 @@ AudioProcessorValueTreeState::ParameterLayout SynthAudioProcessor::createParamet
     params.push_back (std::make_unique<AudioParameterFloat>("sustain", "Envelope: Sustain", EnvelopeParams::SUSTAIN_MIN, EnvelopeParams::SUSTAIN_MAX, EnvelopeParams::SUSTAIN_VALUE));
     params.push_back (std::make_unique<AudioParameterFloat>("release", "Envelope: Release", EnvelopeParams::RELEASE_MIN, EnvelopeParams::RELEASE_MAX, EnvelopeParams::RELEASE_VALUE));
     
-    params.push_back (std::make_unique<AudioParameterInt>("osc1", "Oscillator 1: Waveshape", 1, 7, 1));
-    params.push_back (std::make_unique<AudioParameterInt>("midiOffset1", "Oscillator 1: Midi Offset", -24, 24, 0));
-    params.push_back (std::make_unique<AudioParameterFloat>("oscillator1Gain", "Oscillator 1: Gain", 0.0f, 1.0f,1.0f));
+    params.push_back (std::make_unique<AudioParameterInt>("osc1", "Oscillator 1: Waveshape", Oscillator1Params::WAVESHAPE_MIN,  Oscillator1Params::WAVESHAPE_MAX, Oscillator1Params::WAVESHAPE_VALUE));
+    params.push_back (std::make_unique<AudioParameterInt>("midiOffset1", "Oscillator 1: Midi Offset", Oscillator1Params::MIDIOFFSET_MIN, Oscillator1Params::MIDIOFFSET_MAX, Oscillator1Params::MIDIOFFSET_VALUE));
+    params.push_back (std::make_unique<AudioParameterFloat>("oscillator1Gain", "Oscillator 1: Gain", Oscillator1Params::GAIN_MIN, Oscillator1Params::GAIN_MAX, Oscillator1Params::GAIN_VALUE));
     
-    params.push_back (std::make_unique<AudioParameterInt>("osc2", "Oscillator 2: Waveshape", 1, 7, 1));
-    params.push_back (std::make_unique<AudioParameterInt>("midiOffset2", "Oscillator 2: Midi Offset", -24, 24, 0));
-    params.push_back (std::make_unique<AudioParameterFloat>("oscillator2Gain", "Oscillator 2: Gain", 0.0f, 1.0f,0.0f));
+    params.push_back (std::make_unique<AudioParameterInt>("osc2", "Oscillator 2: Waveshape", Oscillator2Params::WAVESHAPE_MIN,  Oscillator2Params::WAVESHAPE_MAX, Oscillator2Params::WAVESHAPE_VALUE));
+    params.push_back (std::make_unique<AudioParameterInt>("midiOffset2", "Oscillator 2: Midi Offset", Oscillator2Params::MIDIOFFSET_MIN, Oscillator2Params::MIDIOFFSET_MAX, Oscillator2Params::MIDIOFFSET_VALUE));
+    params.push_back (std::make_unique<AudioParameterFloat>("oscillator2Gain", "Oscillator 2: Gain", Oscillator2Params::GAIN_MIN, Oscillator2Params::GAIN_MAX, Oscillator2Params::GAIN_VALUE));
     
-    params.push_back (std::make_unique<AudioParameterInt>("osc3", "Oscillator 3: Waveshape", 1, 7, 1));
-    params.push_back (std::make_unique<AudioParameterInt>("midiOffset3", "Oscillator 3: Midi Offset", -24, 24, 0));
-    params.push_back (std::make_unique<AudioParameterFloat>("oscillator3Gain", "Oscillator 3: Gain", 0.0f, 1.0f,0.0f));
+    params.push_back (std::make_unique<AudioParameterInt>("osc3", "Oscillator 3: Waveshape", Oscillator3Params::WAVESHAPE_MIN,  Oscillator3Params::WAVESHAPE_MAX, Oscillator3Params::WAVESHAPE_VALUE));
+    params.push_back (std::make_unique<AudioParameterInt>("midiOffset3", "Oscillator 3: Midi Offset", Oscillator3Params::MIDIOFFSET_MIN, Oscillator3Params::MIDIOFFSET_MAX, Oscillator3Params::MIDIOFFSET_VALUE));
+    params.push_back (std::make_unique<AudioParameterFloat>("oscillator3Gain", "Oscillator 3: Gain", Oscillator3Params::GAIN_MIN, Oscillator3Params::GAIN_MAX, Oscillator3Params::GAIN_VALUE));
     
-    params.push_back (std::make_unique<AudioParameterFloat>("masterGain", "Master Gain", 0.0f, 1.0f, 0.5f));
+    params.push_back (std::make_unique<AudioParameterFloat>("masterGain", "Master Gain", MasterGainParams::MIN, MasterGainParams::MAX, MasterGainParams::VALUE));
     
-    params.push_back (std::make_unique<AudioParameterFloat>("roomSize", "Reverb: Room Size", 0.1f, 1.0f, 0.1f));
-    params.push_back (std::make_unique<AudioParameterFloat>("damping", "Reverb: Damping", 0.1f, 1.0f, 0.1f));
-    params.push_back (std::make_unique<AudioParameterFloat>("width", "Reverb: Width", 0.1f, 1.0f, 0.1f));
-    params.push_back (std::make_unique<AudioParameterFloat>("wetLevel", "Reverb: Wet Level", 0.0f, 1.0f, 0.0f));
+    params.push_back (std::make_unique<AudioParameterFloat>("roomSize", "Reverb: Room Size", ReverbParams::ROOMSIZE_MIN, ReverbParams::ROOMSIZE_MAX, ReverbParams::ROOMSIZE_VALUE));
+    params.push_back (std::make_unique<AudioParameterFloat>("damping", "Reverb: Damping", ReverbParams::DAMPING_MIN, ReverbParams::DAMPING_MAX, ReverbParams::DAMPING_VALUE));
+    params.push_back (std::make_unique<AudioParameterFloat>("width", "Reverb: Width", ReverbParams::WIDTH_MIN, ReverbParams::WIDTH_MAX, ReverbParams::WIDTH_VALUE));
+    params.push_back (std::make_unique<AudioParameterFloat>("wetLevel", "Reverb: Wet Level", ReverbParams::WETLEVEL_MIN, ReverbParams::WETLEVEL_MAX, ReverbParams::WETLEVEL_VALUE));
     
-    params.push_back (std::make_unique<AudioParameterFloat>("lowpassCutoff", "Filter: Lowpass Cutoff", 20.0f, 20000.0f, 20000.0f));
-    params.push_back (std::make_unique<AudioParameterFloat>("highpassCutoff", "Filter: Highpass Cutoff", 20.0f, 20000.0f, 20.0f));
+    params.push_back (std::make_unique<AudioParameterFloat>("lowpassCutoff", "Filter: Lowpass Cutoff", FilterParams::LOWPASS_CUTOFF_MIN, FilterParams::LOWPASS_CUTOFF_MAX, FilterParams::LOWPASS_CUTOFF_VALUE));
+    params.push_back (std::make_unique<AudioParameterFloat>("highpassCutoff", "Filter: Highpass Cutoff", FilterParams::HIGHPASS_CUTOFF_MIN, FilterParams::HIGHPASS_CUTOFF_MAX, FilterParams::HIGHPASS_CUTOFF_VALUE));
     
     return { params.begin(), params.end() };
 }
@@ -284,11 +284,11 @@ void SynthAudioProcessor::setReverbParameters(){
 }
 
 void SynthAudioProcessor::setFilterParameters(){
-    lowpassIIRCoefficients = IIRCoefficients::makeLowPass(44100, *state.getRawParameterValue("lowpassCutoff"), 3);
+    lowpassIIRCoefficients = IIRCoefficients::makeLowPass(lastSampleRate, *state.getRawParameterValue("lowpassCutoff"), 3);
     lowpassIIRFilterLeft.setCoefficients(lowpassIIRCoefficients);
     lowpassIIRFilterRight.setCoefficients(lowpassIIRCoefficients);
     
-    highpassIIRCoefficients =  IIRCoefficients::makeHighPass(44100, *state.getRawParameterValue("highpassCutoff"), 3);
+    highpassIIRCoefficients =  IIRCoefficients::makeHighPass(lastSampleRate, *state.getRawParameterValue("highpassCutoff"), 3);
     highpassIIRFilterLeft.setCoefficients(highpassIIRCoefficients);
     highpassIIRFilterRight.setCoefficients(highpassIIRCoefficients);
 }

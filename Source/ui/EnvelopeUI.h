@@ -12,7 +12,6 @@
 
 #include <JuceHeader.h>
 #include "../PluginProcessor.h"
-#include "../Constants.h"
 
 //==============================================================================
 /*
@@ -25,7 +24,7 @@ public:
 
     void paint (Graphics&) override;
     void resized() override;
-    void buildEnvelopeSlider(Slider&, float, float, float, String);
+    void buildEnvelopeSlider(Slider&, String);
     void buildLabel(Label& label, String text);
     void setSliderStateFromParameterValue();
 

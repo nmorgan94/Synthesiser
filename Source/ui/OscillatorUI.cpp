@@ -50,7 +50,7 @@ connectedGainParameter(gainParameter)
 
 OscillatorUI::~OscillatorUI()
 {
-     // DBG(*processor.state.getRawParameterValue(connectedParameter));
+    
 }
 
 void OscillatorUI::paint (Graphics& g)

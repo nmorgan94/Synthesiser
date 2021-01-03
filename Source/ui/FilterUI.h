@@ -24,7 +24,7 @@ public:
 
     void paint (Graphics&) override;
     void resized() override;
-    void buildFilterSlider(Slider&, float, float, float, String);
+    void buildFilterSlider(Slider&, String);
     void buildLabel(Label& label, String text);
 
 private:
