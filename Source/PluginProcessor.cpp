@@ -112,6 +112,7 @@ void SynthAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     synthesiser.setCurrentPlaybackSampleRate(sampleRate);
     reverb.setSampleRate(sampleRate);
     oscilloscope.clear();
+    lastSampleRate = sampleRate;
 }
 
 void SynthAudioProcessor::releaseResources()
@@ -218,10 +219,10 @@ AudioProcessorValueTreeState::ParameterLayout SynthAudioProcessor::createParamet
 {
     std::vector<std::unique_ptr<RangedAudioParameter>> params;
     
-    params.push_back (std::make_unique<AudioParameterFloat>("attack", "Envelope: Attack", 0.1f, 5000.0f, 0.1f));
-    params.push_back (std::make_unique<AudioParameterFloat>("decay", "Envelope: Decay", 1.0f, 2000.0f, 1.0f));
-    params.push_back (std::make_unique<AudioParameterFloat>("sustain", "Envelope: Sustain", 0.0f, 1.0f, 1.0f));
-    params.push_back (std::make_unique<AudioParameterFloat>("release", "Envelope: Release", 0.1f, 5000.0f, 0.1f));
+    params.push_back (std::make_unique<AudioParameterFloat>("attack", "Envelope: Attack", EnvelopeParams::ATTACK_MIN, EnvelopeParams::ATTACK_MAX, EnvelopeParams::ATTACK_VALUE));
+    params.push_back (std::make_unique<AudioParameterFloat>("decay", "Envelope: Decay", EnvelopeParams::DECAY_MIN, EnvelopeParams::DECAY_MAX, EnvelopeParams::DECAY_VALUE));
+    params.push_back (std::make_unique<AudioParameterFloat>("sustain", "Envelope: Sustain", EnvelopeParams::SUSTAIN_MIN, EnvelopeParams::SUSTAIN_MAX, EnvelopeParams::SUSTAIN_VALUE));
+    params.push_back (std::make_unique<AudioParameterFloat>("release", "Envelope: Release", EnvelopeParams::RELEASE_MIN, EnvelopeParams::RELEASE_MAX, EnvelopeParams::RELEASE_VALUE));
     
     params.push_back (std::make_unique<AudioParameterInt>("osc1", "Oscillator 1: Waveshape", 1, 7, 1));
     params.push_back (std::make_unique<AudioParameterInt>("midiOffset1", "Oscillator 1: Midi Offset", -24, 24, 0));
@@ -255,6 +256,7 @@ void SynthAudioProcessor::setSynthesiserVoice(){
     for(int i = 0; i < synthesiser.getNumVoices(); i++){
         auto* synthVoice = dynamic_cast<SynthVoice*>(synthesiser.getVoice(i));
         {
+            synthVoice->setADSRSampleRate(lastSampleRate);
             //TODO - value state listener, sampler vid 7
             synthVoice->setEnvelopeParams(*state.getRawParameterValue("attack"),
                                           *state.getRawParameterValue("decay"),

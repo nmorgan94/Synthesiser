@@ -12,6 +12,7 @@
 
 #include <JuceHeader.h>
 #include "../PluginProcessor.h"
+#include "../Constants.h"
 
 //==============================================================================
 /*

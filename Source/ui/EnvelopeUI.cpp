@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "EnvelopeUI.h"
 
+
 //==============================================================================
 EnvelopeUI::EnvelopeUI(SynthAudioProcessor& p) : processor(p)
 {
@@ -18,10 +19,10 @@ EnvelopeUI::EnvelopeUI(SynthAudioProcessor& p) : processor(p)
     // initialise any special settings that your component needs.
    
     
-    buildEnvelopeSlider(attackSlider, 0.1f, 5000.0f, 0.1f, "Attack");
-    buildEnvelopeSlider(decaySlider, 1.0f, 2000.0f, 1.0f, "Decay");
-    buildEnvelopeSlider(sustainSlider, 0.0f, 1.0f, 1.0f, "Susttain");
-    buildEnvelopeSlider(releaseSlider, 0.1f, 5000.0f, 0.1f, "Release");
+    buildEnvelopeSlider(attackSlider, EnvelopeParams::ATTACK_MIN, EnvelopeParams::ATTACK_MAX, EnvelopeParams::ATTACK_VALUE, "Attack");
+    buildEnvelopeSlider(decaySlider, EnvelopeParams::DECAY_MIN, EnvelopeParams::ATTACK_MAX, EnvelopeParams::ATTACK_VALUE, "Decay");
+    buildEnvelopeSlider(sustainSlider, EnvelopeParams::SUSTAIN_MIN, EnvelopeParams::SUSTAIN_MAX, EnvelopeParams::SUSTAIN_VALUE, "Sustain");
+    buildEnvelopeSlider(releaseSlider, EnvelopeParams::RELEASE_MIN, EnvelopeParams::RELEASE_MAX, EnvelopeParams::RELEASE_VALUE, "Release");
     
     attackAttachment =  std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (processor.state, "attack", attackSlider);
     decayAttachment =  std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (processor.state, "decay", decaySlider);

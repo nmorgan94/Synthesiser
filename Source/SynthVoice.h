@@ -73,30 +73,32 @@ public:
     
     void startNote (int midiNoteNumber, float velocity, SynthesiserSound* sound, int currentPitchWheelPosition) override
     {
-        DBG("Start Note");
         midiKey = midiNoteNumber;
-        env1.trigger = 1;
+        adsr.noteOn();
     }
     
     void stopNote (float velocity, bool allowTailOff) override
     {
-        DBG("Stop Note");
-        
-        env1.trigger = 0;
+        adsr.noteOff();
         allowTailOff = true;
         
         
         if (velocity == 0)
             clearCurrentNote();
             
-            }
+    }
+    
+    void setADSRSampleRate(double sampleRate)
+    {
+        adsr.setSampleRate(sampleRate);
+    }
     
     void setEnvelopeParams(float attack, float decay, float sustain, float release)
     {
-        env1.setAttack(attack);
-        env1.setDecay(decay);
-        env1.setSustain(sustain);
-        env1.setRelease(release);
+        adsrParams.attack = attack;
+        adsrParams.decay = decay;
+        adsrParams.sustain = sustain;
+        adsrParams.release = release;
     }
     
     void setOscillator(int oscillatorNumber, float selection, float gain, int offset){
@@ -150,12 +152,12 @@ public:
     
     void renderNextBlock (AudioBuffer <float> &outputBuffer, int startSample, int numSamples) override
     {
-        
+        adsr.setParameters(adsrParams);
         for (int sample = 0; sample < numSamples; ++sample)
         {
             for (int channel = 0; channel < outputBuffer.getNumChannels(); ++channel)
             {
-                outputBuffer.addSample(channel, startSample, env1.adsr(currentSample(), env1.trigger));
+                outputBuffer.addSample(channel, startSample, adsr.getNextSample() * currentSample());
                 
             }
             ++startSample;
@@ -166,7 +168,8 @@ public:
 private:
     int midiKey;
     
-    maxiEnv env1; //try juce adsr
+    ADSR adsr;
+    ADSR::Parameters adsrParams;
     
     OscillatorParams oscillatorArray[3];
     maxiOsc osc[3];

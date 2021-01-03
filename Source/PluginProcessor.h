@@ -14,6 +14,7 @@
 #include "SynthVoice.h"
 #include "SynthSound.h"
 #include "./ui/Oscilloscope.h"
+#include "./Constants.h"
 
 //==============================================================================
 /**
@@ -79,6 +80,8 @@ private:
     
     IIRFilter lowpassIIRFilterLeft, lowpassIIRFilterRight, highpassIIRFilterLeft, highpassIIRFilterRight;
     IIRCoefficients lowpassIIRCoefficients, highpassIIRCoefficients;
+    
+    double lastSampleRate;
     
  
     

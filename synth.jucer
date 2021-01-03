@@ -5,6 +5,10 @@
               jucerFormatVersion="1">
   <MAINGROUP id="eHslX2" name="synth">
     <GROUP id="{1D724622-969C-75E0-366C-1D37028F94E7}" name="Source">
+      <GROUP id="{B96EC1FD-9C26-DD7C-FB22-05FFC8E67139}" name="constants">
+        <FILE id="u40tvc" name="Constants.cpp" compile="1" resource="0" file="Source/Constants.cpp"/>
+        <FILE id="T24LLm" name="Constants.h" compile="0" resource="0" file="Source/Constants.h"/>
+      </GROUP>
       <GROUP id="{21DE7C0D-0104-FA83-1B02-78EBB850943F}" name="ui">
         <FILE id="LwQzU0" name="EnvelopeUI.cpp" compile="1" resource="0" file="Source/ui/EnvelopeUI.cpp"/>
         <FILE id="GmsbMy" name="EnvelopeUI.h" compile="0" resource="0" file="Source/ui/EnvelopeUI.h"/>
