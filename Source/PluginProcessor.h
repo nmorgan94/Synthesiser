@@ -73,21 +73,21 @@ public:
     
     AudioProcessorValueTreeState state;
     Oscilloscope oscilloscope;
+    AudioPlayHead::CurrentPositionInfo lastPosInfo;
+    void updateCurrentTimeInfoFromHost (AudioPlayHead::CurrentPositionInfo&);
     
 private:
     Synthesiser synthesiser;
     
     Reverb reverb;
     Reverb::Parameters reverbParameters;
-    
     IIRFilter lowpassIIRFilterLeft, lowpassIIRFilterRight, highpassIIRFilterLeft, highpassIIRFilterRight;
     IIRCoefficients lowpassIIRCoefficients, highpassIIRCoefficients;
-    
     double lastSampleRate;
-    
     void valueTreePropertyChanged (ValueTree &treeWhosePropertyHasChanged, const Identifier &property) override;
-    
     std::atomic<bool> shouldUpdate { true };
+  
+    
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SynthAudioProcessor)

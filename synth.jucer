@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="jwwq5G" name="synth" projectType="audioplug" pluginCharacteristicsValue="pluginIsSynth,pluginProducesMidiOut,pluginWantsMidiIn"
-              companyName="Nick Morgan" pluginFormats="buildAU,buildVST3" displaySplashScreen="1"
+              companyName="Nick Morgan" pluginFormats="buildAU" displaySplashScreen="1"
               jucerFormatVersion="1">
   <MAINGROUP id="eHslX2" name="synth">
     <GROUP id="{1D724622-969C-75E0-366C-1D37028F94E7}" name="Source">
@@ -23,6 +23,8 @@
         <FILE id="xFCS29" name="Oscilloscope.h" compile="0" resource="0" file="Source/ui/Oscilloscope.h"/>
         <FILE id="YI3Ci3" name="ReverbUI.cpp" compile="1" resource="0" file="Source/ui/ReverbUI.cpp"/>
         <FILE id="Olq484" name="ReverbUI.h" compile="0" resource="0" file="Source/ui/ReverbUI.h"/>
+        <FILE id="A1b6C2" name="TransportUI.cpp" compile="1" resource="0" file="Source/ui/TransportUI.cpp"/>
+        <FILE id="Y8lTFl" name="TransportUI.h" compile="0" resource="0" file="Source/ui/TransportUI.h"/>
       </GROUP>
       <GROUP id="{D0C018E7-3164-1674-45DC-4603FDCFCF3D}" name="Maximilian">
         <GROUP id="{0BC33F47-0316-E97C-0D2A-A39525DE2A4A}" name="src">

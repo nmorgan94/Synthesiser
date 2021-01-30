@@ -17,12 +17,13 @@
 #include "./ui/ReverbUI.h"
 #include "./ui/MasterGainUI.h"
 #include "./ui/FilterUI.h"
+#include "./ui/transportUI.h"
 
 
 //==============================================================================
 /**
  */
-class SynthAudioProcessorEditor  : public AudioProcessorEditor,  public Timer
+class SynthAudioProcessorEditor  : public AudioProcessorEditor
 {
 public:
     SynthAudioProcessorEditor (SynthAudioProcessor&);
@@ -31,7 +32,7 @@ public:
     //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
-    void timerCallback() override;
+    
 
    
     
@@ -47,10 +48,7 @@ private:
     ReverbUI reverbUI;
     FilterUI filterUI;
     MasterGainUI masterGainUI;
-    
-   
-    
-
+    TransportUI transportUI;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SynthAudioProcessorEditor)
 };
