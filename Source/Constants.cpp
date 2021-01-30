@@ -34,7 +34,7 @@ const float FilterParams::LOWPASS_CUTOFF_VALUE = 20000.0f;
 
 const float FilterParams::HIGHPASS_CUTOFF_MIN = 20.0f;
 const float FilterParams::HIGHPASS_CUTOFF_MAX = 20000.0f;
-const float FilterParams::HIGHPASS_CUTOFF_VALUE = 20000.0f;
+const float FilterParams::HIGHPASS_CUTOFF_VALUE = 20.0f;
 
 // ==============================================================================
 
