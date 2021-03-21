@@ -74,17 +74,19 @@ void ChorusUI::resized()
     auto labelArea = area.removeFromBottom(15);
     auto top = area.removeFromTop(area.getHeight()/2);
     
-    feedbackSlider.setBounds(top.removeFromLeft(getWidth() / 2).reduced(20));
-//    roomSizeLabel.setBounds(68, 105, getWidth(), 10);
+    int reduceSize = 20;
     
-    rateSlider.setBounds(top.removeFromLeft (getWidth() / 2).reduced(20));
-//    dampingLabel.setBounds(256, 105, getWidth(), 10);
+    feedbackSlider.setBounds(top.removeFromLeft(getWidth() / 2).reduced(reduceSize));
+    feedbackLabel.setBounds(40, 110, getWidth(), 10);
     
-    depthSlider.setBounds(area.removeFromLeft (getWidth() / 2).reduced(20));
-//    widthLabel.setBounds(77, 219, getWidth(), 10);
+    rateSlider.setBounds(top.removeFromLeft (getWidth() / 2).reduced(reduceSize));
+    rateLabel.setBounds(175, 110, getWidth(), 10);
     
-    centreDelaySlider.setBounds(area.removeFromLeft (getWidth() / 2).reduced(20));
-//    wetLevelLabel.setBounds(258, 219, getWidth(), 10);
+    depthSlider.setBounds(area.removeFromLeft (getWidth() / 2).reduced(reduceSize));
+    depthLabel.setBounds(45, 270, getWidth(), 10);
+    
+    centreDelaySlider.setBounds(area.removeFromLeft (getWidth() / 2).reduced(reduceSize));
+    centreDelayLabel.setBounds(155, 270, getWidth(), 10);
     
     mixSlider.setBounds(getLocalBounds().reduced(75));
     

@@ -75,17 +75,19 @@ void EnvelopeUI::resized()
     auto area = getLocalBounds();
     auto labelArea = area.removeFromBottom(15);
     
+    const int height = 115;
+    
     attackSlider.setBounds(area.removeFromLeft (getWidth() / 4));
-    attackLabel.setBounds(30, 90, getWidth(), 10);
+    attackLabel.setBounds(45, height, getWidth(), 10);
     
     decaySlider.setBounds(area.removeFromLeft (getWidth() / 4));
-    decayLabel.setBounds(123, 90, getWidth(), 10);
+    decayLabel.setBounds(170, height, getWidth(), 10);
     
     sustainSlider.setBounds(area.removeFromLeft (getWidth() / 4));
-    sustainLabel.setBounds(213, 90, getWidth(), 10);
+    sustainLabel.setBounds(290, height, getWidth(), 10);
     
     releaseSlider.setBounds(area.removeFromLeft (getWidth() / 4));
-    releaseLabel.setBounds(305, 90, getWidth(), 10);
+    releaseLabel.setBounds(415, height, getWidth(), 10);
     
     label.setBounds(labelArea);
 }

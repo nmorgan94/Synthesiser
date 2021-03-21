@@ -76,16 +76,16 @@ void ReverbUI::resized()
     auto top = area.removeFromTop(area.getHeight()/2);
     
     roomSizeSlider.setBounds(top.removeFromLeft (getWidth() / 2));
-    roomSizeLabel.setBounds(68, 105, getWidth(), 10);
+    roomSizeLabel.setBounds(39, 125, getWidth(), 10);
     
     dampingSlider.setBounds(top.removeFromLeft (getWidth() / 2));
-    dampingLabel.setBounds(256, 105, getWidth(), 10);
+    dampingLabel.setBounds(161, 125, getWidth(), 10);
     
     widthSlider.setBounds(area.removeFromLeft (getWidth() / 2));
-    widthLabel.setBounds(77, 219, getWidth(), 10);
+    widthLabel.setBounds(45, 275, getWidth(), 10);
     
     wetLevelSlider.setBounds(area.removeFromLeft (getWidth() / 2));
-    wetLevelLabel.setBounds(258, 219, getWidth(), 10);
+    wetLevelLabel.setBounds(165, 275, getWidth(), 10);
     
     label.setBounds(labelArea);
     

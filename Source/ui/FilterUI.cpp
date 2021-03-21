@@ -23,8 +23,8 @@ FilterUI::FilterUI(SynthAudioProcessor& p) : processor(p)
     lowpassAttachment =  std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (processor.state, "lowpassCutoff", lowpassSlider);
     highpassAttachment =  std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (processor.state, "highpassCutoff", highpassSlider);
     
-    buildLabel(highpassLabel, "High-pass");
-    buildLabel(lowpassLabel, "Low-pass");
+    buildLabel(highpassLabel, "HP");
+    buildLabel(lowpassLabel, "LP");
     
     label.setText("Filter", dontSendNotification);
     label.setJustificationType (Justification::centred);
@@ -63,11 +63,13 @@ void FilterUI::resized()
     auto area = getLocalBounds();
     auto labelArea = area.removeFromBottom(15);
     
-    highpassSlider.setBounds(area.removeFromLeft (getWidth() / 2));
-    lowpassSlider.setBounds(area.removeFromLeft (getWidth() / 2));
+    const int height = 57;
     
-    highpassLabel.setBounds(43, 96, getWidth(), 10);
-    lowpassLabel.setBounds(186, 96, getWidth(), 10);
+    highpassSlider.setBounds(area.removeFromLeft (getWidth() / 2));
+    highpassLabel.setBounds(53, height, getWidth(), 10);
+    
+    lowpassSlider.setBounds(area.removeFromLeft (getWidth() / 2));
+    lowpassLabel.setBounds(177, height, getWidth(), 10);
     
     label.setBounds(labelArea);
 

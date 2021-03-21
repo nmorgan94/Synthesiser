@@ -63,11 +63,13 @@ void DelayUI::resized()
     auto area = getLocalBounds();
     auto labelArea = area.removeFromBottom(15);
     
+     const int height = 57;
+    
     wetSlider.setBounds(area.removeFromLeft (getWidth() / 2));
     timeSlider.setBounds(area.removeFromLeft (getWidth() / 2));
     
-    wetLabel.setBounds(43, 96, getWidth(), 10);
-    timeLabel.setBounds(186, 96, getWidth(), 10);
+    wetLabel.setBounds(50, height, getWidth(), 10);
+    timeLabel.setBounds(171, height, getWidth(), 10);
     
     label.setBounds(labelArea);
 

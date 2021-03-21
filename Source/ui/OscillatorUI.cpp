@@ -79,13 +79,15 @@ void OscillatorUI::resized()
     auto area = getLocalBounds();
     auto labelArea = area.removeFromBottom(15);
     
+    const int height = 120;
+    
     comboBox.setBounds(area.removeFromLeft(getWidth() /2).reduced(20));
 
     midiOffsetSlider.setBounds(area.removeFromLeft(getWidth() /4));
-    offsetLabel.setBounds(215, 90, getWidth(), 10);
+    offsetLabel.setBounds(295, height, getWidth(), 10);
     
     volumeSlider.setBounds(area.removeFromLeft(getWidth() /4));
-    gainLabel.setBounds(313, 90, getWidth(), 10);
+    gainLabel.setBounds(421, height, getWidth(), 10);
     
     label.setBounds(labelArea);
     
