@@ -110,7 +110,6 @@ void SynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
     synthesiser.setCurrentPlaybackSampleRate(sampleRate);
-    reverb.setSampleRate(sampleRate);
     oscilloscope.clear();
     lastSampleRate = sampleRate;
 
@@ -123,7 +122,7 @@ void SynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
     if (channels == 0) return;
     
     spec.numChannels = channels;
-    
+    setFilterParameters();
     processorChain.prepare (spec);
     processorChain.reset();
     
@@ -175,21 +174,6 @@ void SynthAudioProcessor::processBlock(AudioBuffer<float> &buffer, MidiBuffer &m
     
     delay.process(buffer, getMainBusNumOutputChannels(), lastSampleRate);    
 
-    if (getMainBusNumOutputChannels() == 1)
-    {
-        lowpassIIRFilterLeft.processSamples(buffer.getWritePointer(0), buffer.getNumSamples());
-        highpassIIRFilterLeft.processSamples(buffer.getWritePointer(0), buffer.getNumSamples());
-        reverb.processMono(buffer.getWritePointer(0), buffer.getNumSamples());
-    }
-    else if (getMainBusNumOutputChannels() == 2)
-    {
-        lowpassIIRFilterLeft.processSamples(buffer.getWritePointer(0), buffer.getNumSamples());
-        lowpassIIRFilterRight.processSamples(buffer.getWritePointer(1), buffer.getNumSamples());
-        highpassIIRFilterLeft.processSamples(buffer.getWritePointer(0), buffer.getNumSamples());
-        highpassIIRFilterRight.processSamples(buffer.getWritePointer(1), buffer.getNumSamples());
-        reverb.processStereo(buffer.getWritePointer(0), buffer.getWritePointer(1), buffer.getNumSamples());
-    }
-    
     dsp::AudioBlock<float> sampleBlock (buffer);
     processorChain.process (dsp::ProcessContextReplacing<float> (sampleBlock));
 
@@ -327,18 +311,17 @@ void SynthAudioProcessor::setReverbParameters()
     reverbParameters.damping = *state.getRawParameterValue("damping");
     reverbParameters.width = *state.getRawParameterValue("width");
     reverbParameters.wetLevel = *state.getRawParameterValue("wetLevel");
-    reverb.setParameters(reverbParameters);
+    processorChain.get<reverb>().setParameters(reverbParameters);
 }
 
 void SynthAudioProcessor::setFilterParameters()
 {
-    lowpassIIRCoefficients = IIRCoefficients::makeLowPass(lastSampleRate, *state.getRawParameterValue("lowpassCutoff"), 3);
-    lowpassIIRFilterLeft.setCoefficients(lowpassIIRCoefficients);
-    lowpassIIRFilterRight.setCoefficients(lowpassIIRCoefficients);
+    auto lowpassIIRCoefficients = dsp::IIR::Coefficients<float>::makeLowPass(lastSampleRate, *state.getRawParameterValue("lowpassCutoff"), 3);
+    *processorChain.get<lowpassIIRFilter>().state = *lowpassIIRCoefficients;
+    
+    auto highpassIIRCoefficients = dsp::IIR::Coefficients<float>::makeHighPass(lastSampleRate, *state.getRawParameterValue("highpassCutoff"), 3);
+    *processorChain.get<highpassIIRFilter>().state = *highpassIIRCoefficients;
 
-    highpassIIRCoefficients = IIRCoefficients::makeHighPass(lastSampleRate, *state.getRawParameterValue("highpassCutoff"), 3);
-    highpassIIRFilterLeft.setCoefficients(highpassIIRCoefficients);
-    highpassIIRFilterRight.setCoefficients(highpassIIRCoefficients);
 }
 
 void SynthAudioProcessor::setChorusParameters(){

@@ -81,20 +81,21 @@ public:
     
 private:
     Synthesiser synthesiser;
-    
-    Reverb reverb;
     Reverb::Parameters reverbParameters;
-    IIRFilter lowpassIIRFilterLeft, lowpassIIRFilterRight, highpassIIRFilterLeft, highpassIIRFilterRight;
-    IIRCoefficients lowpassIIRCoefficients, highpassIIRCoefficients;
     double lastSampleRate;
     void valueTreePropertyChanged (ValueTree &treeWhosePropertyHasChanged, const Identifier &property) override;
     std::atomic<bool> shouldUpdate { true };
     
+    using Filter = dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>>;
+    
     enum
     {
-        chorus
+        lowpassIIRFilter,
+        highpassIIRFilter,
+        chorus,
+        reverb
     };
-    dsp::ProcessorChain<dsp::Chorus<float>> processorChain;
+    dsp::ProcessorChain<Filter, Filter, dsp::Chorus<float>, juce::dsp::Reverb> processorChain;
     
     Delay delay;
     
