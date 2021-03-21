@@ -15,6 +15,7 @@
 #include "SynthSound.h"
 #include "./ui/Oscilloscope.h"
 #include "./Constants.h"
+#include "./Delay.h"
 
 //==============================================================================
 /**
@@ -69,6 +70,8 @@ public:
     void setSynthesiserVoice();
     void setReverbParameters();
     void setFilterParameters();
+    void setChorusParameters();
+    void setDelayParameters();
     double getLevel();
     
     AudioProcessorValueTreeState state;
@@ -86,7 +89,14 @@ private:
     double lastSampleRate;
     void valueTreePropertyChanged (ValueTree &treeWhosePropertyHasChanged, const Identifier &property) override;
     std::atomic<bool> shouldUpdate { true };
-  
+    
+    enum
+    {
+        chorus
+    };
+    dsp::ProcessorChain<dsp::Chorus<float>> processorChain;
+    
+    Delay delay;
     
     
     //==============================================================================

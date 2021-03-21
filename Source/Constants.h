@@ -119,3 +119,19 @@ public:
     static const float GAIN_MAX;
     static const float GAIN_VALUE;
 };
+
+
+
+class DelayParams
+{
+public:
+    static const float WET_MIN;
+    static const float WET_MAX;
+    static const float WET_VALUE;
+    
+    static const int TIME_MIN;
+    static const int TIME_MAX;
+    static const int TIME_VALUE;
+    
+    
+};

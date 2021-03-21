@@ -90,7 +90,6 @@ void ReverbUI::resized()
     label.setBounds(labelArea);
     
     
-    
 }
 
 void ReverbUI::buildReverbSlider(Slider& slider, String text){

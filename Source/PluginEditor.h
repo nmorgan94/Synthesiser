@@ -17,7 +17,9 @@
 #include "./ui/ReverbUI.h"
 #include "./ui/MasterGainUI.h"
 #include "./ui/FilterUI.h"
-#include "./ui/transportUI.h"
+#include "./ui/TransportUI.h"
+#include "./ui/DelayUI.h"
+#include "./ui/ChorusUI.h"
 
 
 //==============================================================================
@@ -49,6 +51,8 @@ private:
     FilterUI filterUI;
     MasterGainUI masterGainUI;
     TransportUI transportUI;
+    DelayUI delayUI;
+    ChorusUI chorusUI;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SynthAudioProcessorEditor)
 };

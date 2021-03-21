@@ -113,6 +113,24 @@ void SynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
     reverb.setSampleRate(sampleRate);
     oscilloscope.clear();
     lastSampleRate = sampleRate;
+
+    dsp::ProcessSpec spec;
+    spec.maximumBlockSize = samplesPerBlock;
+    spec.sampleRate = sampleRate;
+    
+    const auto channels = jmax (getTotalNumInputChannels(), getTotalNumOutputChannels());
+
+    if (channels == 0) return;
+    
+    spec.numChannels = channels;
+    
+    processorChain.prepare (spec);
+    processorChain.reset();
+    
+    const int delayBufferSize = 2 *(sampleRate + samplesPerBlock);
+    delay.setSize(getTotalNumOutputChannels(), delayBufferSize);
+
+
 }
 
 void SynthAudioProcessor::releaseResources()
@@ -146,36 +164,41 @@ bool SynthAudioProcessor::isBusesLayoutSupported(const BusesLayout &layouts) con
 
 void SynthAudioProcessor::processBlock(AudioBuffer<float> &buffer, MidiBuffer &midiMessages)
 {
+    updateCurrentTimeInfoFromHost(lastPosInfo);
     setParameters();
 
     buffer.clear();
+
     synthesiser.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
+    
+    ScopedNoDenormals noDenormals;
+    
+    delay.process(buffer, getMainBusNumOutputChannels(), lastSampleRate);    
 
     if (getMainBusNumOutputChannels() == 1)
     {
         lowpassIIRFilterLeft.processSamples(buffer.getWritePointer(0), buffer.getNumSamples());
-
         highpassIIRFilterLeft.processSamples(buffer.getWritePointer(0), buffer.getNumSamples());
-
         reverb.processMono(buffer.getWritePointer(0), buffer.getNumSamples());
     }
     else if (getMainBusNumOutputChannels() == 2)
     {
         lowpassIIRFilterLeft.processSamples(buffer.getWritePointer(0), buffer.getNumSamples());
         lowpassIIRFilterRight.processSamples(buffer.getWritePointer(1), buffer.getNumSamples());
-
         highpassIIRFilterLeft.processSamples(buffer.getWritePointer(0), buffer.getNumSamples());
         highpassIIRFilterRight.processSamples(buffer.getWritePointer(1), buffer.getNumSamples());
-
         reverb.processStereo(buffer.getWritePointer(0), buffer.getWritePointer(1), buffer.getNumSamples());
     }
+    
+    dsp::AudioBlock<float> sampleBlock (buffer);
+    processorChain.process (dsp::ProcessContextReplacing<float> (sampleBlock));
 
     buffer.applyGain(*state.getRawParameterValue("masterGain") * 0.3);
 
-    updateCurrentTimeInfoFromHost(lastPosInfo);
     oscilloscope.pushBuffer(buffer);
     oscilloscope.checkIfClipping(buffer.getMagnitude(0, buffer.getNumSamples()));
 }
+
 
 //==============================================================================
 bool SynthAudioProcessor::hasEditor() const
@@ -242,6 +265,17 @@ AudioProcessorValueTreeState::ParameterLayout SynthAudioProcessor::createParamet
 
     params.push_back(std::make_unique<AudioParameterFloat>("lowpassCutoff", "Filter: Lowpass Cutoff", FilterParams::LOWPASS_CUTOFF_MIN, FilterParams::LOWPASS_CUTOFF_MAX, FilterParams::LOWPASS_CUTOFF_VALUE));
     params.push_back(std::make_unique<AudioParameterFloat>("highpassCutoff", "Filter: Highpass Cutoff", FilterParams::HIGHPASS_CUTOFF_MIN, FilterParams::HIGHPASS_CUTOFF_MAX, FilterParams::HIGHPASS_CUTOFF_VALUE));
+    
+    params.push_back(std::make_unique<AudioParameterFloat>("chorusMix", "Chorus: Mix", 0, 1, 0));
+    params.push_back(std::make_unique<AudioParameterFloat>("chorusRate", "Chorus: Rate", 10, 90, 10));
+    params.push_back(std::make_unique<AudioParameterFloat>("chorusDepth", "Chorus: Depth", 0.0, 1.0, 0.0));
+    params.push_back(std::make_unique<AudioParameterInt>("chorusCentreDelay", "Chorus: Rate", 1, 99, 1));
+    params.push_back(std::make_unique<AudioParameterFloat>("chorusFeedback", "Chorus: Feedback", -0.9, 0.9, 0));
+    
+    params.push_back(std::make_unique<AudioParameterFloat>("delayWet", "Delay: Wet", DelayParams::WET_MIN, DelayParams::WET_MAX, DelayParams::WET_MIN));
+    params.push_back(std::make_unique<AudioParameterInt>("delayTime", "Delay: Time", DelayParams::TIME_MIN, DelayParams::TIME_MAX, DelayParams::TIME_MIN));
+    
+    
 
     return {params.begin(), params.end()};
 }
@@ -258,6 +292,8 @@ void SynthAudioProcessor::setParameters()
         setSynthesiserVoice();
         setFilterParameters();
         setReverbParameters();
+        setChorusParameters();
+        setDelayParameters();
 
         shouldUpdate = false;
     }
@@ -305,6 +341,20 @@ void SynthAudioProcessor::setFilterParameters()
     highpassIIRFilterRight.setCoefficients(highpassIIRCoefficients);
 }
 
+void SynthAudioProcessor::setChorusParameters(){
+    processorChain.get<chorus>().setMix(*state.getRawParameterValue("chorusMix"));
+    processorChain.get<chorus>().setRate(*state.getRawParameterValue("chorusRate"));
+    processorChain.get<chorus>().setDepth(*state.getRawParameterValue("chorusDepth"));
+    processorChain.get<chorus>().setCentreDelay(*state.getRawParameterValue("chorusCentreDelay"));
+    processorChain.get<chorus>().setFeedback(*state.getRawParameterValue("chorusFeedback"));
+ 
+}
+
+void SynthAudioProcessor::setDelayParameters(){
+    delay.setDelayWet(*state.getRawParameterValue("delayWet"));
+    delay.setDelayTime(lastPosInfo.bpm, *state.getRawParameterValue("delayTime"));
+}
+
 void SynthAudioProcessor::updateCurrentTimeInfoFromHost(AudioPlayHead::CurrentPositionInfo &posInfo)
 {
     if (auto *ph = getPlayHead())
@@ -320,6 +370,8 @@ void SynthAudioProcessor::updateCurrentTimeInfoFromHost(AudioPlayHead::CurrentPo
 
     lastPosInfo.resetToDefault();
 }
+
+
 
 //==============================================================================
 // This creates new instances of the plugin..

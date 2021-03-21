@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="jwwq5G" name="synth" projectType="audioplug" pluginCharacteristicsValue="pluginIsSynth,pluginProducesMidiOut,pluginWantsMidiIn"
-              companyName="Nick Morgan" pluginFormats="buildAU" displaySplashScreen="1"
-              jucerFormatVersion="1">
+              companyName="Nick Morgan" pluginFormats="buildAU" jucerFormatVersion="1"
+              displaySplashScreen="1">
   <MAINGROUP id="eHslX2" name="synth">
     <GROUP id="{1D724622-969C-75E0-366C-1D37028F94E7}" name="Source">
+      <GROUP id="{2D0686E6-EF0A-6526-1BE7-AECD91D7BFA5}" name="Effects">
+        <FILE id="q8Nw32" name="Delay.h" compile="0" resource="0" file="Source/Delay.h"/>
+        <FILE id="oVma2M" name="Distortion.h" compile="0" resource="0" file="Source/Distortion.h"/>
+      </GROUP>
       <GROUP id="{B96EC1FD-9C26-DD7C-FB22-05FFC8E67139}" name="constants">
         <FILE id="u40tvc" name="Constants.cpp" compile="1" resource="0" file="Source/Constants.cpp"/>
         <FILE id="T24LLm" name="Constants.h" compile="0" resource="0" file="Source/Constants.h"/>
       </GROUP>
       <GROUP id="{21DE7C0D-0104-FA83-1B02-78EBB850943F}" name="ui">
+        <FILE id="xj6mII" name="ChorusUI.cpp" compile="1" resource="0" file="Source/ui/ChorusUI.cpp"/>
+        <FILE id="CpZOHP" name="ChorusUI.h" compile="0" resource="0" file="Source/ui/ChorusUI.h"/>
+        <FILE id="GuueuU" name="DelayUI.cpp" compile="1" resource="0" file="Source/ui/DelayUI.cpp"/>
+        <FILE id="G58TfK" name="DelayUI.h" compile="0" resource="0" file="Source/ui/DelayUI.h"/>
+        <FILE id="YwiZEv" name="DistortionUI.cpp" compile="1" resource="0"
+              file="Source/ui/DistortionUI.cpp"/>
+        <FILE id="oKpMI6" name="DistortionUI.h" compile="0" resource="0" file="Source/ui/DistortionUI.h"/>
         <FILE id="LwQzU0" name="EnvelopeUI.cpp" compile="1" resource="0" file="Source/ui/EnvelopeUI.cpp"/>
         <FILE id="GmsbMy" name="EnvelopeUI.h" compile="0" resource="0" file="Source/ui/EnvelopeUI.h"/>
         <FILE id="K4EJ5w" name="FilterUI.cpp" compile="1" resource="0" file="Source/ui/FilterUI.cpp"/>
@@ -85,6 +96,7 @@
         <MODULEPATH id="juce_gui_basics" path="JuceLibraryCode/modules"/>
         <MODULEPATH id="juce_gui_extra" path="JuceLibraryCode/modules"/>
         <MODULEPATH id="juce_opengl" path="JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_dsp" path="../../../../Applications/JUCE/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
   </EXPORTFORMATS>
@@ -99,6 +111,7 @@
     <MODULE id="juce_core" showAllCode="1" useLocalCopy="1" useGlobalPath="0"/>
     <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="1" useGlobalPath="0"/>
     <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="1" useGlobalPath="0"/>
+    <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="1" useGlobalPath="0"/>
     <MODULE id="juce_events" showAllCode="1" useLocalCopy="1" useGlobalPath="0"/>
     <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="1" useGlobalPath="0"/>
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="1" useGlobalPath="0"/>

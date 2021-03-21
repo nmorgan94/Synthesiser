@@ -102,4 +102,13 @@ const float Oscillator3Params::GAIN_MIN = 0.0f;
 const float Oscillator3Params::GAIN_MAX = 1.0f;
 const float Oscillator3Params::GAIN_VALUE = 0.0f;
 
+
 // ==============================================================================
+
+const float DelayParams::WET_MIN = 0.0;
+const float DelayParams::WET_MAX = 0.8;
+const float DelayParams::WET_VALUE = 0.0;
+
+const int DelayParams::TIME_MIN = 1;
+const int DelayParams::TIME_MAX = 4;
+const int DelayParams::TIME_VALUE = 1;
