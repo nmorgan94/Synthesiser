@@ -89,6 +89,7 @@ void ChorusUI::resized()
     centreDelayLabel.setBounds(155, 270, getWidth(), 10);
     
     mixSlider.setBounds(getLocalBounds().reduced(75));
+    mixLabel.setBounds(115, 200, getWidth(), 10);
     
     label.setBounds(labelArea);
 
@@ -102,6 +103,7 @@ void ChorusUI::buildChorusSlider(Slider& slider, String text){
     slider.setPopupDisplayEnabled (true, false, this);
     slider.setNumDecimalPlacesToDisplay(2);
     slider.setTextValueSuffix(" "+text);
+    
 }
 
 void ChorusUI::buildLabel(Label& label, String text){
