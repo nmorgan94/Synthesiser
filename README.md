@@ -2,6 +2,8 @@
 
 A polyphonic subtractive synthesiser plugin built with JUCE.
 
+![Screenshot](Screenshot.png)
+
 ## Features:
 
     - Delay (Synced with DAW)
