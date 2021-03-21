@@ -5,6 +5,9 @@
               displaySplashScreen="1">
   <MAINGROUP id="eHslX2" name="synth">
     <GROUP id="{1D724622-969C-75E0-366C-1D37028F94E7}" name="Source">
+      <GROUP id="{868E9751-8E47-2468-468D-ADDC21760358}" name="Components">
+        <FILE id="qz7FZq" name="CustomSlider.h" compile="0" resource="0" file="Source/CustomSlider.h"/>
+      </GROUP>
       <GROUP id="{2D0686E6-EF0A-6526-1BE7-AECD91D7BFA5}" name="Effects">
         <FILE id="q8Nw32" name="Delay.h" compile="0" resource="0" file="Source/Delay.h"/>
         <FILE id="oVma2M" name="Distortion.h" compile="0" resource="0" file="Source/Distortion.h"/>

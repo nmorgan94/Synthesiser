@@ -12,6 +12,7 @@
 
 #include <JuceHeader.h>
 #include "../PluginProcessor.h"
+#include "../CustomSlider.h"
 
 //==============================================================================
 /*
@@ -27,7 +28,7 @@ public:
 
 private:
     SynthAudioProcessor& processor;
-    Slider masterGainSlider;
+    CustomSlider masterGainSlider;
     std::unique_ptr <AudioProcessorValueTreeState::SliderAttachment> masterGainAttachment;
     Label label;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MasterGainUI)
